@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements JGameLib.GameEven
         gameLib.setScreenGrid(n,m);
         gameLib.listener(this);
         gameLib.addCardColor(Color.rgb(10,10,100));
+        cardBall = gameLib.addCardColor(Color.rgb(255,255,255), 1,10,1,1);
+        cardBall.checkCollision();
         cardEdgeL = gameLib.addCardColor(Color.rgb(255,255,255), 0,0,1,m);
         cardEdgeL.checkCollision();
         cardEdgeR = gameLib.addCardColor(Color.rgb(255,255,255), n-1,0,1,m);
@@ -54,8 +56,6 @@ public class MainActivity extends AppCompatActivity implements JGameLib.GameEven
         cardScore1.text("0", Color.rgb(128,128,128), 100);
         cardScore2 = gameLib.addCardColor(Color.argb(0,0,0,0), 1,17,4,4);
         cardScore2.text("0", Color.rgb(128,128,128), 100);
-        cardBall = gameLib.addCardColor(Color.rgb(255,255,255), 1,10,1,1);
-        cardBall.checkCollision();
     }
 
     void newBall() {
@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements JGameLib.GameEven
 
     // Game Event start ====================================
 
+    @Override
     public void onGameWorkEnded(JGameLib.Card card, JGameLib.WorkType workType) {
         if(card == cardRacket1) {
             if(cardRacket1.screenRect().left > 2)
@@ -117,28 +118,30 @@ public class MainActivity extends AppCompatActivity implements JGameLib.GameEven
         }
     }
 
+    @Override
     public void onGameTouchEvent(JGameLib.Card card, int action, float blockX, float blockY) {}
 
+    @Override
     public void onGameSensor(int sensorType, float x, float y, float z) {}
 
+    @Override
     public void onGameCollision(JGameLib.Card card1, JGameLib.Card card2) {
-        if (cardEdgeL.equals(card1) || cardEdgeR.equals(card1)) {
-            if(cardEdgeL.equals(card1))
+        if (cardEdgeL.equals(card2) || cardEdgeR.equals(card2)) {
+            if(cardEdgeL.equals(card2))
                 cardBall.move(1, cardBall.screenRect().top);
             else
                 cardBall.move(n-2, cardBall.screenRect().top);
             cardBall.movingEndless(-cardBall.unitHrz, cardBall.unitVtc);
-        } else if (cardRacket1.equals(card1) || cardRacket2.equals(card1)) {
+        } else if (cardRacket1.equals(card2) || cardRacket2.equals(card2)) {
             cardBall.movingEndless(cardBall.unitHrz, -cardBall.unitVtc);
-        } else if(cardEdgeT.equals(card1) || cardEdgeB.equals(card1)) {
-            if(cardEdgeT.equals(card1))
+        } else if(cardEdgeT.equals(card2) || cardEdgeB.equals(card2)) {
+            if(cardEdgeT.equals(card2))
                 scoreMe ++;
             else
                 scoreCom ++;
             newBall();
             if(scoreMe >= 10 || scoreCom >= 10)
                 stopGame();
-            //else
         }
     }
 
