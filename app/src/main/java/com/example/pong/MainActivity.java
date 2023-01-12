@@ -53,9 +53,9 @@ public class MainActivity extends AppCompatActivity implements JGameLib.GameEven
         cardRacket2 = gameLib.addCardColor(Color.rgb(255,255,255), 8,rows-3,4,1);
         cardRacket2.checkCollision();
         cardScore1 = gameLib.addCardColor(Color.TRANSPARENT, 1,13,4,4);
-        cardScore1.text("0", Color.rgb(128,128,128), 100);
+        cardScore1.text("0", Color.rgb(128,128,128), 3);
         cardScore2 = gameLib.addCardColor(Color.TRANSPARENT, 1,17,4,4);
-        cardScore2.text("0", Color.rgb(128,128,128), 100);
+        cardScore2.text("0", Color.rgb(128,128,128), 3);
     }
 
     void newBall() {
