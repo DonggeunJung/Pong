@@ -63,11 +63,11 @@ public class MainActivity extends AppCompatActivity implements JGameLib.GameEven
         cardScore2.text("" + scoreMe);
         int x = gameLib.random(1, cols-2);
         cardBall.move(x,10);
-        double speed = 0.5;
+        double speed = 0.4;
         if(gameLib.random(1) == 0)
-            cardBall.movingEndless(speed, speed);
+            cardBall.movingDir(speed, speed);
         else
-            cardBall.movingEndless(-speed, speed);
+            cardBall.movingDir(-speed, speed);
     }
 
     void stopGame() {
@@ -131,9 +131,9 @@ public class MainActivity extends AppCompatActivity implements JGameLib.GameEven
                 cardBall.move(1, cardBall.screenRect().top);
             else
                 cardBall.move(cols-2, cardBall.screenRect().top);
-            cardBall.movingEndless(-cardBall.unitHrz, cardBall.unitVtc);
+            cardBall.movingDir(-cardBall.unitHrz, cardBall.unitVtc);
         } else if (cardRacket1.equals(card2) || cardRacket2.equals(card2)) {
-            cardBall.movingEndless(cardBall.unitHrz, -cardBall.unitVtc);
+            cardBall.movingDir(cardBall.unitHrz, -cardBall.unitVtc);
         } else if(cardEdgeT.equals(card2) || cardEdgeB.equals(card2)) {
             if(cardEdgeT.equals(card2))
                 scoreMe ++;
