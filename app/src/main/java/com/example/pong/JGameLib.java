@@ -1,10 +1,12 @@
 /* JGameLib_Java : 2D Game library for education      */
-/* Date : 2023.Jan.04 ~                               */
+/* Date : 2023.Jan.04 ~ 2023.Jan.12                   */
 /* Author : Dennis (Donggeun Jung)                    */
 /* Contact : topsan72@gmail.com                       */
 package com.example.pong;
 
+import static android.content.Context.MODE_PRIVATE;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -32,6 +34,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 public class JGameLib extends View implements SensorEventListener {
+    static String TAG = "JGameLib";
     boolean firstDraw = true;
     float totalPixelW = 480, totalPixelH = 800;
     float blocksW = 480, blocksH = 800;
@@ -44,6 +47,7 @@ public class JGameLib extends View implements SensorEventListener {
     float touchX = 0;
     float touchY = 0;
     HashSet<Card> removeCards = new HashSet();
+    SharedPreferences sharedPref = null;
 
     public JGameLib(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -99,6 +103,8 @@ public class JGameLib extends View implements SensorEventListener {
             RectF scrRect = screenRect;
             if(card.dstRect != null) {
                 scrRect = getDstRect(card);
+                if(!checkCollision(scrRect, screenRect))
+                    continue;
             }
             if(card.backType == 1 && card.bmp != null) {
                 if(card.srcRect == null) {
@@ -143,10 +149,11 @@ public class JGameLib extends View implements SensorEventListener {
         if(card.edgeThick > 0f) {
             pnt.setStyle(Paint.Style.STROKE);
             float strokeWidth = blockSize * card.edgeThick;
-            dstRect.left += strokeWidth;
-            dstRect.right -= strokeWidth;
-            dstRect.top += strokeWidth;
-            dstRect.bottom -= strokeWidth;
+            float strokeHalf = strokeWidth / 2f;
+            dstRect.left += strokeHalf;
+            dstRect.right -= strokeHalf;
+            dstRect.top += strokeHalf;
+            dstRect.bottom -= strokeHalf;
             pnt.setStrokeWidth(strokeWidth);
             pnt.setColor(card.edgeColor);
             canvas.drawRect(dstRect, pnt);
@@ -266,11 +273,13 @@ public class JGameLib extends View implements SensorEventListener {
         return -1;
     }
 
-    boolean checkCollision(RectF rect1, RectF rect2) {
-        if(rect1.top >= rect2.bottom || rect1.bottom <= rect2.top
-                || rect1.left >= rect2.right || rect1.right <= rect2.left)
-            return false;
-        return true;
+    SharedPreferences getSharedPref() {
+        if(sharedPref == null)
+            sharedPref = getContext().getSharedPreferences(TAG, MODE_PRIVATE);
+        return sharedPref;
+    }
+    SharedPreferences.Editor getSharedPrefEdit() {
+        return getSharedPref().edit();
     }
 
     // Inside Class start ====================================
@@ -597,10 +606,31 @@ public class JGameLib extends View implements SensorEventListener {
             text(str, textColor, textSize);
         }
 
+        public void text(int n) {
+            text("" + n, textColor, textSize);
+        }
+
         public void text(String str, int color, double size) {
             text = str;
             textColor = color;
             textSize = size;
+            needDraw = true;
+        }
+
+        public String text() {
+            return text;
+        }
+
+        public int text2int() {
+            return Integer.parseInt(text);
+        }
+
+        public boolean isTextEmpty() {
+            return text == null || text.isEmpty();
+        }
+
+        public void backColor(int color) {
+            backColor = color;
         }
 
         public void edgeColor(int color) {
@@ -779,6 +809,13 @@ public class JGameLib extends View implements SensorEventListener {
         return (int)(Math.random() * (max-min+1)) + min;
     }
 
+    public boolean checkCollision(RectF rect1, RectF rect2) {
+        if(rect1.top >= rect2.bottom || rect1.bottom <= rect2.top
+                || rect1.left >= rect2.right || rect1.right <= rect2.left)
+            return false;
+        return true;
+    }
+
     public DirType collisionDirRect(RectF rect1, RectF rect2) {
         if(rect2.contains(rect1.left, rect1.top)) {
             if(rect2.right - rect1.left > rect2.bottom - rect1.top)
@@ -806,6 +843,66 @@ public class JGameLib extends View implements SensorEventListener {
 
     public void removeCard(Card card) {
         removeCards.add(card);
+    }
+
+    public void set(String key, boolean b) {
+        SharedPreferences.Editor editor = getSharedPrefEdit();
+        editor.putBoolean(key, b);
+        editor.commit();
+    }
+
+    public void set(String key, int n) {
+        SharedPreferences.Editor editor = getSharedPrefEdit();
+        editor.putInt(key, n);
+        editor.commit();
+    }
+
+    public void set(String key, float f) {
+        SharedPreferences.Editor editor = getSharedPrefEdit();
+        editor.putFloat(key, f);
+        editor.commit();
+    }
+
+    public void set(String key, String str) {
+        SharedPreferences.Editor editor = getSharedPrefEdit();
+        editor.putString(key, str);
+        editor.commit();
+    }
+
+    public boolean getBoolean(String key) {
+        return getBoolean(key, false);
+    }
+
+    public boolean getBoolean(String key, boolean b) {
+        SharedPreferences sp = getSharedPref();
+        return sp.getBoolean(key, b);
+    }
+
+    public int getInt(String key) {
+        return getInt(key, 0);
+    }
+
+    public int getInt(String key, int n) {
+        SharedPreferences sp = getSharedPref();
+        return sp.getInt(key, n);
+    }
+
+    public float getFloat(String key) {
+        return getFloat(key, 0f);
+    }
+
+    public float getFloat(String key, float f) {
+        SharedPreferences sp = getSharedPref();
+        return sp.getFloat(key, f);
+    }
+
+    public String getString(String key) {
+        return getString(key, "");
+    }
+
+    public String getString(String key, String str) {
+        SharedPreferences sp = getSharedPref();
+        return sp.getString(key, str);
     }
 
     // API end ====================================
