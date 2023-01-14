@@ -64,7 +64,7 @@ public class MainActivity extends AppCompatActivity implements JGameLib.GameEven
         int x = gameLib.random(1, cols-2);
         cardBall.move(x,10);
         double speed = 0.4;
-        if(gameLib.random(1) == 0)
+        if(gameLib.random(2) == 0)
             cardBall.movingDir(speed, speed);
         else
             cardBall.movingDir(-speed, speed);
