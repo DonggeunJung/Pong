@@ -8,15 +8,9 @@ import android.view.View;
 public class MainActivity extends AppCompatActivity implements JGameLib.GameEvent {
     JGameLib gameLib = null;
     static int rows = 34, cols = 20;
-    JGameLib.Card cardEdgeL;
-    JGameLib.Card cardEdgeR;
-    JGameLib.Card cardEdgeT;
-    JGameLib.Card cardEdgeB;
     JGameLib.Card cardBall;
-    JGameLib.Card cardRacket1;
-    JGameLib.Card cardRacket2;
-    JGameLib.Card cardScore1;
-    JGameLib.Card cardScore2;
+    JGameLib.Card cardEdgeL, cardEdgeR, cardEdgeT, cardEdgeB;
+    JGameLib.Card cardRacket1, cardRacket2, cardScore1, cardScore2;
     int scoreMe = 0, scoreCom = 0;
 
     @Override
