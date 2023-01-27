@@ -3,6 +3,7 @@ package com.example.pong;
 import androidx.appcompat.app.AppCompatActivity;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
 
 public class MainActivity extends AppCompatActivity implements Mosaic.GameEvent {
@@ -113,7 +114,7 @@ public class MainActivity extends AppCompatActivity implements Mosaic.GameEvent 
     }
 
     @Override
-    public void onGameTouchEvent(Mosaic.Card card, int action, float x, float y) {}
+    public void onGameTouchEvent(Mosaic.Card card, int action, float x, float y, MotionEvent event) {}
 
     @Override
     public void onGameSensor(int sensorType, float x, float y, float z) {}
